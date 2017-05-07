@@ -1,0 +1,20 @@
+9.1(a)
+petroleum = LOAD '/pigInput4' using PigStorage(',') AS (DistrictId:chararray,Distributername:chararray,buyrate:chararray,sellrate:chararray,volumeIN:int,volumeOUT:int,year:int);
+Name_Vol = foreach petroleum generate Distributername,volumeOUT;
+group_by_distributers = group Name_Vol by Distributername;
+total_volume = foreach group_by_distributers generate group,SUM(Name_Vol.volumeOUT);
+
+9.1(b)
+order_distributer_ID = ORDER petroleum by sellrate desc;
+top10_distributer = limit order_distributer_ID 10;
+result = foreach top10_distributer generate DistrictId,volumeOUT;
+dump result;
+
+9.1(c)
+order_cosumption = ORDER petroleum by volumeIN desc;
+years = limit order_cosumption 10;
+result =  foreach years generate year,DistrictId;
+
+9.1(d)
+order_cosumption = ORDER petroleum by sellrate asc;
+result = limit order_cosumption 1;
